@@ -1,0 +1,25 @@
+# Convenience MySQL for local development.
+#   docker compose up -d
+# Then in server/: cp .env.example .env && npm run migrate && npm run seed && npm run dev
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: labscan-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: labscan
+      MYSQL_USER: labscan
+      MYSQL_PASSWORD: labscan
+    ports:
+      - '3306:3306'
+    volumes:
+      - labscan_mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-uroot', '-proot']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  labscan_mysql_data:
